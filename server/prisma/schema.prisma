@@ -22,11 +22,12 @@ model User {
 
 model Monitor {
   id           String        @id @default(uuid())
+  name          String?
   url          String
   intervalMin  Int           @default(5)
   createdAt    DateTime      @default(now())
   userId       String
-  user         User          @relation(fields: [userId], references: [id])
+  user         User?         @relation(fields: [userId], references: [id])
   checkResults CheckResult[]
 }
 
