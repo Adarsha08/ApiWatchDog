@@ -16,3 +16,12 @@ export const createMontior=asynchandler(async(req:Request,res:Response)=>
 
 
 })
+
+//get the monitors 
+export const getMonitors=asynchandler(async(req:Request,res:Response)=>
+{
+   const userId=req.params.id as string
+   const monitors=await monitorService.get(userId)
+   res.status(200).json(monitors)
+})
+
