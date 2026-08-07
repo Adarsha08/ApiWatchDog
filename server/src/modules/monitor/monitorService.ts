@@ -9,6 +9,7 @@ type CreateMonitorInput = {
 }
 
 export const monitorService = {
+  
     create: async ({ url, name, intervalMin, userId }: CreateMonitorInput) => {
     const existing = await prisma.monitor.findFirst({ where: { url } })
     if (existing) {
@@ -17,6 +18,15 @@ export const monitorService = {
 
     return prisma.monitor.create({
       data: { url, name, intervalMin, userId }
+    })
+  },
+
+  //get the monitors 
+  get:async(userId:string)=>
+  {
+    return prisma.monitor.findMany({
+      where:userId?{userId}:{},
+      orderBy:{createdAt:"desc"}
     })
   }
 }
