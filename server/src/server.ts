@@ -2,6 +2,7 @@ import express from 'express'
 import monitorRoute from '../src/modules/monitor/monitorRoute'
 import { errorHandler } from './middlewares/errorHandler'
 import { startMonitorChecks } from './jobs/checkMonitors'
+import cors from 'cors'
 
 const app = express()
 app.use(express.json())
@@ -9,6 +10,7 @@ app.use(express.json())
 app.get('/', (req, res) => {
   res.json({ message: 'Server is running' })
 })
+app.use(cors())
 
 // routes
 app.use('/api/monitors', monitorRoute)
