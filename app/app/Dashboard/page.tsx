@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import FormModal from '@/components/Modals/FormModal'
 import AddMonitorForm from '@/components/Modals/AddMonitorForm'
+import { useMonitors } from '@/hooks/useMonitors'
 
 type Monitor = {
   id: string
@@ -12,17 +13,8 @@ type Monitor = {
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false)
-  const [monitors, setMonitors] = useState<Monitor[]>([])
-
-  const fetchMonitors = async () => {
-    const res = await fetch('http://localhost:5000/api/monitors')
-    const data = await res.json()
-    setMonitors(data)
-  }
-
-  useEffect(() => {
-    fetchMonitors()
-  }, [])
+  const{monitors,refetch}=useMonitors()
+  
 
   return (
     <div>
@@ -37,7 +29,7 @@ const Dashboard = () => {
       >
         <AddMonitorForm
           onClose={() => setOpen(false)}
-          onSuccess={fetchMonitors}
+          onSuccess={refetch}
         />
       </FormModal>
 
@@ -47,6 +39,8 @@ const Dashboard = () => {
         ))}
       </div>
     </div>
+
+    
   )
 }
 
