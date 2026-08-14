@@ -1,12 +1,18 @@
 "use client"
 import {useState,useEffect} from 'react'
 //creating the custom hooks
+type CheckResult = {
+  statusCode: number
+  responseMs: number
+  checkedAt: string
+}
 
 type Monitors={
     id:string,
     url:string,
     name?:string,
-    intervalMin:number
+    intervalMin:number,
+    checkResults:CheckResult[]
 }
 export const useMonitors=()=>
 {

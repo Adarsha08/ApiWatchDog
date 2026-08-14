@@ -1,20 +1,12 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import FormModal from '@/components/Modals/FormModal'
 import AddMonitorForm from '@/components/Modals/AddMonitorForm'
 import { useMonitors } from '@/hooks/useMonitors'
 
-type Monitor = {
-  id: string
-  url: string
-  name?: string
-  intervalMin: number
-}
-
 const Dashboard = () => {
   const [open, setOpen] = useState(false)
-  const{monitors,refetch}=useMonitors()
-  
+  const { monitors, refetch } = useMonitors()
 
   return (
     <div>
@@ -34,13 +26,19 @@ const Dashboard = () => {
       </FormModal>
 
       <div>
-        {monitors.map((item) => (
-          <div key={item.id}>{item.url}</div>
-        ))}
+        {monitors.map((item) => {
+          const latestCheck = item.checkResults[0]
+          const isUp = latestCheck?.statusCode === 200
+
+          return (
+            <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ color: isUp ? '#22C55E' : '#EF4444', fontSize: '20px' }}>●</span>
+              <span>{item.name || item.url}</span>
+            </div>
+          )
+        })}
       </div>
     </div>
-
-    
   )
 }
 
