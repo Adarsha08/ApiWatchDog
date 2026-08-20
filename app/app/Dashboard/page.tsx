@@ -1,13 +1,13 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import FormModal from '@/components/Modals/FormModal'
 import AddMonitorForm from '@/components/Modals/AddMonitorForm'
 import { useMonitors } from '@/hooks/useMonitors'
+
 import Link from 'next/link'
 const Dashboard = () => {
   const [open, setOpen] = useState(false)
-  const{monitors,refetch}=useMonitors()
-  
+  const { monitors, refetch } = useMonitors()
 
   return (
     <div className='mr-6 ml-6 mt-4'>
@@ -30,6 +30,7 @@ const Dashboard = () => {
 
       <div>
         {monitors.map((item) => {
+
   const isUp = item.latestCheck?.statusCode === 200
   return (
     <div
@@ -65,10 +66,9 @@ const Dashboard = () => {
     </div>
   )
 })}
+
       </div>
     </div>
-
-    
   )
 }
 
