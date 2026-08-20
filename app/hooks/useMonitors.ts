@@ -28,6 +28,7 @@ export const useMonitors = () => {
   const fetchMonitors = async () => {
     const res = await fetch(`${apiUrl}/api/monitors`)
     const data = await res.json()
+      console.log(data) 
     setMonitors(data)
   }
 
