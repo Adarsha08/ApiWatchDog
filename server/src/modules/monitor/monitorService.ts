@@ -9,24 +9,65 @@ type CreateMonitorInput = {
 }
 
 export const monitorService = {
-  
-    create: async ({ url, name, intervalMin, userId }: CreateMonitorInput) => {
+  create: async ({ url, name, intervalMin, userId }: CreateMonitorInput) => {
     const existing = await prisma.monitor.findFirst({ where: { url } })
     if (existing) {
       throw new AppError("You're already monitoring this URL", 409)
     }
-
     return prisma.monitor.create({
       data: { url, name, intervalMin, userId }
     })
   },
 
-  //get the monitors 
-  get:async(userId:string)=>
-  {
-    return prisma.monitor.findMany({
-      where:userId?{userId}:{},
-      orderBy:{createdAt:"desc"}
+ getAll: async (userId?: string) => {
+  const monitors = await prisma.monitor.findMany({
+    where: userId ? { userId } : {},
+    orderBy: { createdAt: "desc" },
+    include: {
+      checkResults: {
+        orderBy: { checkedAt: "desc" },
+        take: 20 // enough recent checks to compute uptime %
+      }
+    }
+  })
+
+  return monitors.map((monitor) => {
+    const checks = monitor.checkResults
+    const latestCheck = checks[0]
+
+    const upCount = checks.filter(
+      (c) => c.statusCode >= 200 && c.statusCode < 300
+    ).length
+
+    const uptimePercent = checks.length
+      ? Math.round((upCount / checks.length) * 100)
+      : 0
+
+    const avgResponseMs = checks.length
+      ? Math.round(checks.reduce((sum, c) => sum + c.responseMs, 0) / checks.length)
+      : 0
+
+    return {
+      ...monitor,
+      latestCheck,
+      uptimePercent,
+      avgResponseMs
+    }
+  })
+},
+
+  getById: async (id: string) => {
+    const monitor = await prisma.monitor.findUnique({
+      where: { id },
+      include: {
+        checkResults: {
+          orderBy: { checkedAt: "desc" }
+        }
+      }
     })
+    if (!monitor) {
+      throw new AppError("Monitor not found", 404)
+    }
+    return monitor
   }
 }
