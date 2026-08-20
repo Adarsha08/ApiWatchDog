@@ -21,7 +21,15 @@ export const createMontior=asynchandler(async(req:Request,res:Response)=>
 export const getMonitors=asynchandler(async(req:Request,res:Response)=>
 {
    const userId=req.params.id as string
-   const monitors=await monitorService.get(userId)
+   const monitors=await monitorService.getAll(userId)
    res.status(200).json(monitors)
+})
+//get the monitors by id 
+
+export const getMonitorsById=asynchandler(async(req:Request,res:Response)=>
+{
+   const id=req.params.id as string
+   const getMonitorById=await monitorService.getById(id)
+   res.status(200).json(getMonitorById)
 })
 

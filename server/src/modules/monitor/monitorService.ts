@@ -26,13 +26,7 @@ export const monitorService = {
   {
     return prisma.monitor.findMany({
       where:userId?{userId}:{},
-      orderBy:{createdAt:"desc"},
-      include:{
-        checkResults:{
-          orderBy:{checkedAt:"desc"},
-          take:1
-        }
-      }
+      orderBy:{createdAt:"desc"}
     })
   }
 }
