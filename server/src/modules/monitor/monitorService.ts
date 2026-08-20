@@ -22,11 +22,51 @@ export const monitorService = {
   },
 
   //get the monitors 
-  get:async(userId:string)=>
-  {
-    return prisma.monitor.findMany({
-      where:userId?{userId}:{},
-      orderBy:{createdAt:"desc"}
-    })
+ getAll: async (userId?: string) => {
+  const monitors = await prisma.monitor.findMany({
+    where: userId ? { userId } : {},
+    orderBy: { createdAt: "desc" },
+    include: {
+      checkResults: {
+        orderBy: { checkedAt: "desc" }
+      }
+    }
+  })
+
+  // calculate uptime % and avg response time for each monitor
+  return monitors.map((monitor) => {
+    const checks = monitor.checkResults
+    const total = checks.length
+    const upCount = checks.filter((c) => c.statusCode === 200).length
+    const uptimePercent = total > 0 ? (upCount / total) * 100 : 100
+    const avgResponseMs = total > 0
+      ? Math.round(checks.reduce((sum, c) => sum + c.responseMs, 0) / total)
+      : 0
+    const latestCheck = checks[0]
+
+    return {
+      ...monitor,
+      uptimePercent: Number(uptimePercent.toFixed(2)),
+      avgResponseMs,
+      latestCheck
+    }
+  })
+},
+//get teh monitor details by id 
+getById:async(id:string)=>
+{
+  const monitor=await prisma.monitor.findUnique({
+    where:{id},
+    include:{
+      checkResults:{
+        orderBy:{checkedAt:"desc"}
+      }
+    }
+  })
+
+    if (!monitor) {
+    throw new AppError("Monitor not found", 404)
   }
+  return monitor
+}
 }
