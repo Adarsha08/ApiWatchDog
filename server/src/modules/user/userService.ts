@@ -1,5 +1,4 @@
 import prisma from "../../lib/prisma"
-import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 export const userService=
 {
