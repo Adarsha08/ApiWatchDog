@@ -26,7 +26,7 @@ const Dashboard = () => {
       </FormModal>
 
       <div>
-        {monitors.map((item) => {
+        {(monitors||[]).map((item) => {
           const isUp = item.latestCheck ? item.latestCheck.statusCode >= 200 && item.latestCheck.statusCode < 300 : false
 
           return (
