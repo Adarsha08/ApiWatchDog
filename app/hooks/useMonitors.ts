@@ -1,4 +1,5 @@
 "use client"
+import api from '@/lib/axios'
 import { useState, useEffect } from 'react'
 
 type CheckResult = {
@@ -26,10 +27,10 @@ export const useMonitors = () => {
   const [monitors, setMonitors] = useState<Monitors[]>([])
 
   const fetchMonitors = async () => {
-    const res = await fetch(`${apiUrl}/api/monitors`)
-    const data = await res.json()
-      console.log(data) 
-    setMonitors(data)
+    console.log('Auth header:', api.defaults.headers.common['Authorization'])
+    const res =await api.get('/api/monitors')
+  
+    setMonitors(res.data)
   }
 
   useEffect(() => {
