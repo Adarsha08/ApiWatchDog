@@ -1,12 +1,13 @@
 'use client'
 
+import api from '@/lib/axios'
 import { createContext, useContext, useState, ReactNode } from 'react'
 
 
 interface AuthContextType {
   user: any
   accessToken: string|null
-  login: (token: string, userData: any) => void
+    login: (email: string, password: any) => void
   
 }
 interface User{
@@ -14,6 +15,7 @@ interface User{
     name:string,
     email:string
 }
+
 const AuthContext=createContext<AuthContextType |null>(null)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -35,6 +37,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const data=await res.json()
         setUser(data.user)
         setAccessToken(data.accessToken)
+        //here we are directly setting up the access token as a header in the axios api 
+        api.defaults.headers.common['Authorization'] = `Bearer ${data.accessTjoken}`
+
 
     }
     return(
