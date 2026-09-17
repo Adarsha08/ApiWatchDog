@@ -4,7 +4,7 @@ export const userService=
 {
 create:async(name:string,email:string,hashPassword:string)=>
 {
-     const checkEmail=await prisma.user.findMany({where:{email}})
+     const checkEmail=await prisma.user.findUnique({where:{email}})
      if(checkEmail)
      {
         throw new Error("Email already registered")
