@@ -1,5 +1,6 @@
 // hooks/useMonitorDetail.ts
 "use client"
+import api from '@/lib/axios'
 import { useState, useEffect } from 'react'
 
 type CheckResult = {
@@ -26,21 +27,17 @@ export const useMonitorDetail = (id: string) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchMonitor = async () => {
-    try {
-      setLoading(true)
-      const res = await fetch(`${apiUrl}/api/monitors/${id}`)
-      if (!res.ok) {
-        throw new Error('Monitor not found')
-      }
-      const data = await res.json()
-      setMonitor(data)
-    } catch (err) {
-      setError('Could not load this monitor')
-    } finally {
-      setLoading(false)
-    }
+ const fetchMonitor = async () => {
+  try {
+    setLoading(true)
+    const res = await api.get(`/api/monitors/${id}`)
+    setMonitor(res.data)
+  } catch (err) {
+    setError('Could not load this monitor')
+  } finally {
+    setLoading(false)
   }
+}
 
   useEffect(() => {
     if (id) fetchMonitor()

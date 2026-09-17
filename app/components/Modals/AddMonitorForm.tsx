@@ -1,5 +1,6 @@
 // components/Modals/AddMonitorForm.tsx
 'use client'
+import api from '@/lib/axios'
 import React, { useState } from 'react'
 
 type Props = {
@@ -12,29 +13,18 @@ const AddMonitorForm = ({ onClose, onSuccess }: Props) => {
   const [name, setName] = useState('')
   const [error, setError] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setError('')
 
-    try {
-      const res = await fetch('http://localhost:5000/api/monitors', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, name })
-      })
-
-      if (!res.ok) {
-        const data = await res.json()
-        setError(data.message || 'Something went wrong')
-        return
-      }
-
-      onSuccess()
-      onClose()
-    } catch (err) {
-      setError('Could not reach the server')
-    }
+  try {
+    await api.post('/api/monitors', { url, name })
+    onSuccess()
+    onClose()
+  } catch (err: any) {
+    setError(err.response?.data?.message || 'Could not reach the server')
   }
+}
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
@@ -48,7 +38,7 @@ const AddMonitorForm = ({ onClose, onSuccess }: Props) => {
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://myapp.com/api/health"
           required
-          className="w-full border rounded p-2"
+          className="w-full border rounded p-2" 
         />
       </div>
 

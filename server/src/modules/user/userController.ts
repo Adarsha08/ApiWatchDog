@@ -42,12 +42,12 @@ export const login = asynchandler(async (req: Request, res: Response, next: Next
 
   const { accessToken, refreshToken } = await userService.loginService(user.id)
 
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'none',
-    maxAge: 7 * 24 * 60 * 60 * 1000
-  })
+ res.cookie('refreshToken', refreshToken, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+  maxAge: 7 * 24 * 60 * 60 * 1000
+})
 
   return res.status(200).json({
     message: 'Login successful',
@@ -55,7 +55,7 @@ export const login = asynchandler(async (req: Request, res: Response, next: Next
     user: {
       id: user.id,
       email: user.email,
-      name: user.name
+      name: user.name,
     }
   })
 })

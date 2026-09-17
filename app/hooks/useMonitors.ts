@@ -1,4 +1,5 @@
 "use client"
+import { useAuth } from '@/context/AuthContext'
 import api from '@/lib/axios'
 import { useState, useEffect } from 'react'
 
@@ -22,20 +23,19 @@ type Monitors = {
 }
 
 export const useMonitors = () => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL
-
+  const { loading: authLoading, accessToken } = useAuth()
   const [monitors, setMonitors] = useState<Monitors[]>([])
 
   const fetchMonitors = async () => {
-    console.log('Auth header:', api.defaults.headers.common['Authorization'])
-    const res =await api.get('/api/monitors')
-  
+    const res = await api.get('/api/monitors')
     setMonitors(res.data)
   }
 
   useEffect(() => {
-    fetchMonitors()
-  }, [])
+    if (!authLoading) {   // only fetch once auth check has FINISHED
+      fetchMonitors()
+    }
+  }, [authLoading])
 
   return { monitors, refetch: fetchMonitors }
 }

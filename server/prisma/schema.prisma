@@ -27,8 +27,8 @@ model Monitor {
   url          String
   intervalMin  Int           @default(5)
   createdAt    DateTime      @default(now())
-  userId       String?
-  user         User?         @relation(fields: [userId], references: [id])
+  userId       String
+  user         User         @relation(fields: [userId], references: [id])
   checkResults CheckResult[]
 }
 
