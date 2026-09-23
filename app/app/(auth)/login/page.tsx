@@ -1,66 +1,61 @@
 "use client";
 
-import { useAuth } from '@/context/AuthContext'
-import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { useState } from 'react'
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 type LoginForm = {
-  email: string
-  password: string
-}
+  email: string;
+  password: string;
+};
 
 export default function Login() {
-  const auth = useAuth()
-  const router = useRouter()
+  const auth = useAuth();
+  const router = useRouter();
 
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors }
-  } = useForm<LoginForm>()
+    formState: { errors },
+  } = useForm<LoginForm>();
 
   const onSubmit = async (data: LoginForm) => {
     try {
-      setError("")
-      setLoading(true)
+      setError("");
+      setLoading(true);
 
-         await auth.login(data.email,data.password)
-        router.push('/Dashboard')
-
+      await auth.login(data.email, data.password);
+      router.push("/Dashboard");
     } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed")
+      setError(err.response?.data?.message || "Login failed");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex bg-gray-50">
-
       {/* Left panel */}
       <div className="hidden lg:flex w-1/2 bg-gray-900 flex-col justify-between p-12">
         <div>
-          <h1 className="text-white text-2xl font-bold">FitPro</h1>
+          <h1 className="text-white text-2xl font-bold">ApiWatchDog</h1>
         </div>
 
         <div>
           <h2 className="text-white text-4xl font-bold leading-tight mb-4">
-            Manage your gym<br />smarter
+            Manage your Apis
+            <br />
           </h2>
           <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
-            A unified platform for admins, trainers, and members. Track workouts, sessions, and subscriptions in one place.
+            A platform to keep tracks on apis
           </p>
         </div>
 
         <div className="flex gap-8">
-          <div>
-            <p className="text-white text-2xl font-bold">4</p>
-            <p className="text-gray-500 text-xs uppercase">Role types</p>
-          </div>
           <div>
             <p className="text-white text-2xl font-bold">12+</p>
             <p className="text-gray-500 text-xs uppercase">Features</p>
@@ -74,9 +69,7 @@ export default function Login() {
 
       {/* Right panel */}
       <div className="flex-1 flex items-center justify-center p-8">
-
         <div className="w-full max-w-sm">
-
           <div className="mb-8">
             <h2 className="text-2xl font-semibold text-gray-900">Sign in</h2>
             <p className="text-gray-500 text-sm mt-1">
@@ -85,7 +78,6 @@ export default function Login() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
             {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-1">
@@ -94,7 +86,7 @@ export default function Login() {
 
               <input
                 {...register("email", {
-                  required: "Email is required"
+                  required: "Email is required",
                 })}
                 type="email"
                 placeholder="you@example.com"
@@ -119,8 +111,8 @@ export default function Login() {
                   required: "Password is required",
                   minLength: {
                     value: 6,
-                    message: "Minimum 6 characters"
-                  }
+                    message: "Minimum 6 characters",
+                  },
                 })}
                 type="password"
                 placeholder="••••••••"
@@ -149,13 +141,17 @@ export default function Login() {
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
-
           </form>
-          <button className='cursor-pointer' onClick={() => router.push("/register")}>
-Dont have a account 
-</button>
+          <div className="flex justify-center">
+          <button
+            className="cursor-pointer text-[14px] text-gray-400"
+            onClick={() => router.push("/register")}
+          >
+            Dont have a account?
+          </button>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,77 +1,86 @@
 "use client";
 
-import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { useState } from 'react'
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 type RegisterForm = {
-  name: string
-  email: string
-  password: string
-}
+  name: string;
+  email: string;
+  password: string;
+};
 
 export default function Register() {
-  const router = useRouter()
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
+  const router = useRouter();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterForm>()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterForm>();
 
   const onSubmit = async (data: RegisterForm) => {
     try {
-      setError("")
-      setSuccess("")
+      setError("");
+      setSuccess("");
 
-     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(data),
-})
-if (!res.ok) {
-      const errorData = await res.json()
-      setError(errorData.message || 'Registration failed')
-      return   // ← stop here, don't redirect or show success
-    }
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        },
+      );
+      if (!res.ok) {
+        const errorData = await res.json();
+        setError(errorData.message || "Registration failed");
+        return; // ← stop here, don't redirect or show success
+      }
 
-      setSuccess("Account created successfully")
-      router.push('/login') // redirect after register
+      setSuccess("Account created successfully");
+      router.push(`/verify-otp?email=${encodeURIComponent(data.email)}`) // redirect after register
     } catch (err: any) {
-      setError(err.response?.data?.message || "Registration failed")
+      setError(err.response?.data?.message || "Registration failed");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex bg-gray-50">
-      
       {/* Left panel */}
       <div className="hidden lg:flex w-1/2 bg-gray-900 flex-col justify-between p-12">
         <div>
-          <h1 className="text-white text-2xl font-bold">FitPro</h1>
+          <h1 className="text-white text-2xl font-bold">Api WatchDog</h1>
         </div>
 
         <div>
           <h2 className="text-white text-4xl font-bold leading-tight mb-4">
-            Join the platform<br />today
+            Join the platform
+            <br />
+            today
           </h2>
           <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
-            Create your account and start managing workouts, sessions, and memberships easily.
+            Create your account and keep watching the apis.
           </p>
         </div>
 
         <div className="flex gap-8">
-          <div>
-            <p className="text-white text-2xl font-bold">4</p>
-            <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">Role types</p>
-          </div>
+         
           <div>
             <p className="text-white text-2xl font-bold">12+</p>
-            <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">Features</p>
+            <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">
+              Features
+            </p>
           </div>
           <div>
             <p className="text-white text-2xl font-bold">100%</p>
-            <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">Secure</p>
+            <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">
+              Secure
+            </p>
           </div>
         </div>
       </div>
@@ -79,51 +88,71 @@ if (!res.ok) {
       {/* Right panel */}
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-sm">
-          
           <div className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900">Create account</h2>
-            <p className="text-gray-500 text-sm mt-1">Fill the details to get started</p>
+            <h2 className="text-2xl font-semibold text-gray-900">
+              Create account
+            </h2>
+            <p className="text-gray-500 text-sm mt-1">
+              Fill the details to get started
+            </p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
             {/* Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-900 mb-1">Name</label>
+              <label className="block text-sm font-medium text-gray-900 mb-1">
+                Name
+              </label>
               <input
                 {...register("name", { required: "Name is required" })}
                 type="text"
                 placeholder="Your name"
                 className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm text-black focus:outline-none focus:ring-2 focus:ring-gray-900 transition"
               />
-              {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+              {errors.name && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-900 mb-1">Email</label>
+              <label className="block text-sm font-medium text-gray-900 mb-1">
+                Email
+              </label>
               <input
                 {...register("email", { required: "Email is required" })}
                 type="email"
                 placeholder="you@example.com"
                 className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm text-black focus:outline-none focus:ring-2 focus:ring-gray-900 transition"
               />
-              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-900 mb-1">Password</label>
+              <label className="block text-sm font-medium text-gray-900 mb-1">
+                Password
+              </label>
               <input
                 {...register("password", {
                   required: "Password is required",
-                  minLength: { value: 6, message: "Minimum 6 characters" }
+                  minLength: { value: 6, message: "Minimum 6 characters" },
                 })}
                 type="password"
                 placeholder="••••••••"
                 className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm text-black focus:outline-none focus:ring-2 focus:ring-gray-900 transition"
               />
-              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             {/* Error */}
@@ -148,13 +177,17 @@ if (!res.ok) {
             >
               {isSubmitting ? "Creating..." : "Create Account"}
             </button>
-
           </form>
-        <button className='cursor-pointer' onClick={() => router.push("/login")}>
-  Already have an account--
-</button>
+          <div className="flex justify-center">
+          <button
+            className="cursor-pointer  text-gray-400 text-[14px]"
+            onClick={() => router.push("/login")}
+          >
+            Already have an account?
+          </button>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

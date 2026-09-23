@@ -59,3 +59,9 @@ export const login = asynchandler(async (req: Request, res: Response, next: Next
     }
   })
 })
+
+export const verifyOtp = asynchandler(async (req: Request, res: Response) => {
+  const { email, code } = req.body
+  const result = await userService.verifyOtp(email, code)
+  res.status(200).json(result)
+})

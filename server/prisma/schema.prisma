@@ -13,12 +13,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model User {
-  id        String    @id @default(uuid())
-  name      String
-  email     String    @unique
-  password  String
-  createdAt DateTime  @default(now())
-  monitors  Monitor[]
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password      String
+  createdAt     DateTime @default(now())
+  emailVerified Boolean  @default(false)
+  otpCode       String?
+  otpExpiresAt  DateTime?
+  monitors      Monitor[]
 }
 
 model Monitor {

@@ -1,6 +1,7 @@
 import Jwt  from "jsonwebtoken"
 import { Request,Response,NextFunction } from "express"
 import { asynchandler } from "../utils/asyncHandler"
+import prisma from "../lib/prisma"
 export const authMiddleware=async(req:Request,res:Response,next:NextFunction)=>
 {
      //we have to first get the access token from the frontend 
@@ -40,8 +41,9 @@ export const refreshToken = asynchandler(async (req: Request, res: Response) => 
       process.env.JWT_ACCESS_SECRET as string,
       { expiresIn: '15m' }
     )
+    const user = await prisma.user.findUnique({ where: { id: decoded.id } })
 
-    res.status(200).json({ accessToken })
+    res.status(200).json({ accessToken,user:{id:user?.id,name:user?.name,email:user?.email} })
   } catch {
     return res.status(401).json({ message: 'Invalid refresh token' })
   }
@@ -57,3 +59,4 @@ export const logout = asynchandler(async (req: Request, res: Response) => {
   })
   res.status(200).json({ message: 'Logged out' })
 })
+
