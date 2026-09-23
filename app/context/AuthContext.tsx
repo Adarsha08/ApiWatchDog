@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (res.ok) {
           const data = await res.json()
           setAccessToken(data.accessToken)
+          setUser(data.user)
           api.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`
         }
       } catch {
