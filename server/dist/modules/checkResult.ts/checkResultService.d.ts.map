@@ -1,0 +1,1 @@
+{"version":3,"file":"checkResultService.d.ts","sourceRoot":"","sources":["../../../src/modules/checkResult.ts/checkResultService.ts"],"names":[],"mappings":"AAEA,eAAO,MAAM,WAAW;IACtB,MAAM,0CAAgD;QAAE,SAAS,EAAE,MAAM,CAAC;QAAC,UAAU,EAAE,MAAM,CAAC;QAAC,UAAU,EAAE,MAAM,CAAA;KAAE;;;;;;;CAKpH,CAAA"}

@@ -2,10 +2,10 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 import express from 'express'
-import monitorRoute from '../src/modules/monitor/monitorRoute'
+import monitorRoute from './modules/monitor/monitorRoute'
 import { errorHandler } from './middlewares/errorHandler'
 import { startMonitorChecks } from './jobs/checkMonitors'
-import userRoutes from '../src/modules/user/userRoutes'
+import userRoutes from './modules/user/userRoutes'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
