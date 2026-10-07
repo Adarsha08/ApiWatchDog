@@ -1,6 +1,6 @@
-// app/(auth)/verify-otp/page.tsx
 'use client'
-import { useState } from 'react'
+
+import { Suspense, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import {
   InputOTP,
@@ -8,7 +8,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 
-export default function VerifyOtpPage() {
+function VerifyOtpContent() {
   const searchParams = useSearchParams()
   const email = searchParams.get('email') || ''
   const router = useRouter()
@@ -18,19 +18,25 @@ export default function VerifyOtpPage() {
   const [loading, setLoading] = useState(false)
 
   const handleVerify = async () => {
-      console.log('Verifying with email:', email) 
+    console.log('Verifying with email:', email)
     setError('')
     setLoading(true)
+
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/verify-otp`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code })
-      })
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/verify-otp`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, code }),
+        }
+      )
+
       if (!res.ok) {
         const data = await res.json()
         throw new Error(data.message || 'Verification failed')
       }
+
       router.push('/login')
     } catch (err: any) {
       setError(err.message)
@@ -42,7 +48,10 @@ export default function VerifyOtpPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-4">
       <h1 className="text-xl font-semibold">Verify your email</h1>
-      <p className="text-sm text-gray-500">Enter the code sent to {email}</p>
+
+      <p className="text-sm text-gray-500">
+        Enter the code sent to {email}
+      </p>
 
       <InputOTP maxLength={6} value={code} onChange={setCode}>
         <InputOTPGroup>
@@ -66,4 +75,12 @@ export default function VerifyOtpPage() {
       </button>
     </div>
   )
-}   
+}
+
+export default function VerifyOtpPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyOtpContent />
+    </Suspense>
+  )
+}
